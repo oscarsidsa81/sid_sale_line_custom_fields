@@ -10,6 +10,7 @@
         "sale",
         "sale_stock",
         "stock",
+        "oct_fecha_contrato_ventas"
     ],
     "data": [],
     "installable": True,
