@@ -35,25 +35,25 @@ class SaleOrderLine(models.Model):
         help="Cantidad pronosticada (virtual_available) en la ubicación de stock del almacén localizado por state_es_cr.",
     )
 
-    sid_invoice = fields.Selection(
+    pending_invoice = fields.Selection(
         [
             ("to_invoice", "A facturar"),
             ("invoiced", "Facturado"),
             ("no", "N/A"),
         ],
         string="Pendiente Facturación",
-        compute="_compute_sid_invoice",
+        compute="_compute_pending_invoice",
         store=True,
         readonly=True,
     )
 
-    pendiente = fields.Selection(
+    pending_delivery = fields.Selection(
         [
             ("pending", "Pendiente"),
             ("ok", "OK"),
         ],
         string="Pendiente Entrega",
-        compute="_compute_pendiente",
+        compute="_compute_pending_delivery",
         store=True,
         readonly=True,
     )
@@ -95,23 +95,23 @@ class SaleOrderLine(models.Model):
     # Computes auxiliares
     # -------------------------
     @api.depends("qty_to_invoice", "qty_invoiced", "state")
-    def _compute_sid_invoice(self):
+    def _compute_pending_invoice(self):
         for line in self:
             if line.state == "cancel":
-                line.sid_invoice = "no"
+                line.pending_invoice = "no"
                 continue
             if float_compare(line.qty_to_invoice or 0.0, 0.0, precision_digits=2) > 0:
-                line.sid_invoice = "to_invoice"
+                line.pending_invoice = "to_invoice"
             elif float_compare(line.qty_invoiced or 0.0, 0.0, precision_digits=2) > 0:
-                line.sid_invoice = "invoiced"
+                line.pending_invoice = "invoiced"
             else:
-                line.sid_invoice = "no"
+                line.pending_invoice = "no"
 
     @api.depends("qty_delivered", "product_uom_qty", "state")
-    def _compute_pendiente(self):
+    def _compute_pending_delivery(self):
         for line in self:
             if line.state == "cancel":
-                line.pendiente = "ok"
+                line.pending_delivery = "ok"
                 continue
             remaining = (line.product_uom_qty or 0.0) - (line.qty_delivered or 0.0)
-            line.pendiente = "pending" if float_compare(remaining, 0.0, precision_digits=2) > 0 else "ok"
+            line.pending_delivery = "pending" if float_compare(remaining, 0.0, precision_digits=2) > 0 else "ok"
