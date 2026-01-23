@@ -2,6 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/../sid_purchase_extra_fields/.idea/sid_purchase_extra_fields.iml" filepath="$PROJECT_DIR$/../sid_purchase_extra_fields/.idea/sid_purchase_extra_fields.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/sid_sale_line_custom_fields.iml" filepath="$PROJECT_DIR$/.idea/sid_sale_line_custom_fields.iml" />
       <module fileurl="file://$PROJECT_DIR$/../sid_sale_line_views_ov/.idea/sid_sale_line_views_ov.iml" filepath="$PROJECT_DIR$/../sid_sale_line_views_ov/.idea/sid_sale_line_views_ov.iml" />
     </modules>

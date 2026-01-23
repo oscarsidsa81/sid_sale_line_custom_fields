@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 from odoo import api, fields, models
 from odoo.tools.float_utils import float_compare
 
@@ -7,84 +5,110 @@ from odoo.tools.float_utils import float_compare
 class SaleOrderLine(models.Model):
     _inherit = "sale.order.line"
 
-    # ====== Campos detectados en tus vistas exportadas ======
+    contractual_qty = fields.Float(string="Cantidad contractual")
 
-    # Cantidad contractual (en tu export aparecía como x_contractual_qty)
-    x_contractual_qty = fields.Float(string="Cantidad contractual")
-
-    # Familia (en conversaciones anteriores la usabas como related a categoría)
-    x_familia = fields.Char(
+    familia = fields.Char(
         string="Familia",
         related="product_id.categ_id.name",
         store=True,
         readonly=True,
     )
 
-    # Tags/Actividades (export: x_stock.move.tags + rel table)
-    x_sale_line_tags = fields.Many2many(
-        comodel_name="x_stock.move.tags",
-        relation="x_sale_order_line_x_stock_move_tags_rel",
-        column1="sale_order_line_id",
-        column2="x_stock_move_tags_id",
-        string="Actividades",
-        copy=False,
+    # Madrid
+    sid_qty_stock_mad = fields.Float(
+        string="Stock pronosticado (Madrid)",
+        compute="_compute_sid_qty_stock_mad",
+        store=False,
+        readonly=True,
+        help="Cantidad pronosticada (virtual_available) en la ubicación de stock del almacén localizado por state_es_m.",
     )
 
-    # Campos Studio vistos en el tree
-    x_studio_qty_stock_ptllno = fields.Float(
-        string="Qty stock Ptllno",
-        # normalmente related a un forecast en product/product.template; si ya existe en tu BD,
-        # NO lo redefinas. Si no existe, deja este related como no-store para que no rompa.
-        # Puedes ajustarlo cuando confirmes el campo real.
-        help="Campo legado Studio. Ajustar related real si aplica.",
+    # Puertollano / Ciudad Real
+    sid_qty_stock_ptllno = fields.Float(
+        string="Stock pronosticado (Ptllno)",
+        compute="_compute_sid_qty_stock_ptllno",
+        store=False,
+        readonly=True,
+        help="Cantidad pronosticada (virtual_available) en la ubicación de stock del almacén localizado por state_es_cr.",
     )
 
-    # Estados auxiliares que aparecen en searchpanel
-    x_invoice = fields.Selection(
+    sid_invoice = fields.Selection(
         [
             ("to_invoice", "A facturar"),
             ("invoiced", "Facturado"),
             ("no", "N/A"),
         ],
         string="Pendiente Facturación",
-        compute="_compute_x_invoice",
+        compute="_compute_sid_invoice",
         store=True,
         readonly=True,
     )
 
-    x_pendiente = fields.Selection(
+    pendiente = fields.Selection(
         [
             ("pending", "Pendiente"),
             ("ok", "OK"),
         ],
         string="Pendiente Entrega",
-        compute="_compute_x_pendiente",
+        compute="_compute_pendiente",
         store=True,
         readonly=True,
     )
 
+    # -------------------------
+    # Helpers
+    # -------------------------
+    def _get_wh_stock_location_by_state_xmlid(self, state_xmlid):
+        """Devuelve la lot_stock_id del primer warehouse cuya partner_id.state_id coincida con el state."""
+        Warehouse = self.env["stock.warehouse"]
+        state = self.env.ref(state_xmlid, raise_if_not_found=False)
+        if not state:
+            return False
+
+        wh = Warehouse.search([("partner_id.state_id", "=", state.id)], limit=1)
+        return wh.lot_stock_id if wh else False
+
+    def _get_virtual_available_in_location(self, product, location):
+        if not product or not location:
+            return 0.0
+        return product.with_context(location=location.id).virtual_available or 0.0
+
+    # -------------------------
+    # Computes stock
+    # -------------------------
+    @api.depends("product_id")
+    def _compute_sid_qty_stock_mad(self):
+        location = self._get_wh_stock_location_by_state_xmlid("base.state_es_m")
+        for line in self:
+            line.sid_qty_stock_mad = self._get_virtual_available_in_location(line.product_id, location)
+
+    @api.depends("product_id")
+    def _compute_sid_qty_stock_ptllno(self):
+        location = self._get_wh_stock_location_by_state_xmlid("base.state_es_cr")
+        for line in self:
+            line.sid_qty_stock_ptllno = self._get_virtual_available_in_location(line.product_id, location)
+
+    # -------------------------
+    # Computes auxiliares
+    # -------------------------
     @api.depends("qty_to_invoice", "qty_invoiced", "state")
-    def _compute_x_invoice(self):
-        # Nota: lógica sencilla y robusta. Si tienes reglas más finas, las movemos luego.
+    def _compute_sid_invoice(self):
         for line in self:
             if line.state == "cancel":
-                line.x_invoice = "no"
+                line.sid_invoice = "no"
                 continue
             if float_compare(line.qty_to_invoice or 0.0, 0.0, precision_digits=2) > 0:
-                line.x_invoice = "to_invoice"
+                line.sid_invoice = "to_invoice"
             elif float_compare(line.qty_invoiced or 0.0, 0.0, precision_digits=2) > 0:
-                line.x_invoice = "invoiced"
+                line.sid_invoice = "invoiced"
             else:
-                line.x_invoice = "no"
+                line.sid_invoice = "no"
 
     @api.depends("qty_delivered", "product_uom_qty", "state")
-    def _compute_x_pendiente(self):
+    def _compute_pendiente(self):
         for line in self:
             if line.state == "cancel":
-                line.x_pendiente = "ok"
+                line.pendiente = "ok"
                 continue
             remaining = (line.product_uom_qty or 0.0) - (line.qty_delivered or 0.0)
-            if float_compare(remaining, 0.0, precision_digits=2) > 0:
-                line.x_pendiente = "pending"
-            else:
-                line.x_pendiente = "ok"
+            line.pendiente = "pending" if float_compare(remaining, 0.0, precision_digits=2) > 0 else "ok"
