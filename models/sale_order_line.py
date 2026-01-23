@@ -6,6 +6,9 @@ class SaleOrderLine(models.Model):
     _inherit = "sale.order.line"
 
     contractual_qty = fields.Float(string="Cantidad contractual")
+    sid_retraso
+
+    sid_po_line_delay = fields.
 
     familia = fields.Char(
         string="Familia",
