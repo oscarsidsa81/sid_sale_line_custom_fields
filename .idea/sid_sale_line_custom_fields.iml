@@ -8,5 +8,6 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="sid_sale_line_views_ov" />
     <orderEntry type="module" module-name="sid_purchase_extra_fields" />
+    <orderEntry type="module" module-name="sid_purchase_views_ov" />
   </component>
 </module>
