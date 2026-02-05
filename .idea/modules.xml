@@ -2,9 +2,14 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/../sid_misc/.idea/sid_misc.iml" filepath="$PROJECT_DIR$/../sid_misc/.idea/sid_misc.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../sid_purchase_core/.idea/sid_purchase_core.iml" filepath="$PROJECT_DIR$/../sid_purchase_core/.idea/sid_purchase_core.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../sid_purchase_delay_sync/.idea/sid_purchase_delay_sync.iml" filepath="$PROJECT_DIR$/../sid_purchase_delay_sync/.idea/sid_purchase_delay_sync.iml" />
       <module fileurl="file://$PROJECT_DIR$/../sid_purchase_extra_fields/.idea/sid_purchase_extra_fields.iml" filepath="$PROJECT_DIR$/../sid_purchase_extra_fields/.idea/sid_purchase_extra_fields.iml" />
       <module fileurl="file://$PROJECT_DIR$/../sid_purchase_views_ov/.idea/sid_purchase_views_ov.iml" filepath="$PROJECT_DIR$/../sid_purchase_views_ov/.idea/sid_purchase_views_ov.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../sid_sale_line_core/.idea/sid_sale_line_core.iml" filepath="$PROJECT_DIR$/../sid_sale_line_core/.idea/sid_sale_line_core.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/sid_sale_line_custom_fields.iml" filepath="$PROJECT_DIR$/.idea/sid_sale_line_custom_fields.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../sid_sale_line_stock/.idea/sid_sale_line_stock.iml" filepath="$PROJECT_DIR$/../sid_sale_line_stock/.idea/sid_sale_line_stock.iml" />
       <module fileurl="file://$PROJECT_DIR$/../sid_sale_line_views_ov/.idea/sid_sale_line_views_ov.iml" filepath="$PROJECT_DIR$/../sid_sale_line_views_ov/.idea/sid_sale_line_views_ov.iml" />
     </modules>
   </component>

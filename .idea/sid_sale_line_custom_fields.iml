@@ -9,5 +9,10 @@
     <orderEntry type="module" module-name="sid_sale_line_views_ov" />
     <orderEntry type="module" module-name="sid_purchase_extra_fields" />
     <orderEntry type="module" module-name="sid_purchase_views_ov" />
+    <orderEntry type="module" module-name="sid_misc" />
+    <orderEntry type="module" module-name="sid_purchase_core" />
+    <orderEntry type="module" module-name="sid_purchase_delay_sync" />
+    <orderEntry type="module" module-name="sid_sale_line_core" />
+    <orderEntry type="module" module-name="sid_sale_line_stock" />
   </component>
 </module>

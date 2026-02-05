@@ -1,1 +1,1 @@
-from . import models
+# Meta module: no python code

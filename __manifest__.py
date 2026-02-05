@@ -1,16 +1,14 @@
 # -*- coding: utf-8 -*-
 {
-    "name": "SID - Sale Order Line Custom Fields",
+    "name": "SID - Sale Order Line Custom Fields (meta)",
     "version": "15.0.1.0.0",
     "category": "Sales",
-    "summary": "Campos y computes base para sale.order.line (migración desde Studio).",
-    "author": "SID",
+    "summary": "Modulo paraguas para compatibilidad. Agrupa dependencias funcionales de sale.order.line.",
+    "author": "SIDSA / Custom",
     "license": "LGPL-3",
     "depends": [
-        "sale",
-        "sale_stock",
-        "stock",
-        "oct_fecha_contrato_ventas"
+        "sid_sale_line_core",
+        "sid_sale_line_stock"
     ],
     "data": [],
     "installable": True,

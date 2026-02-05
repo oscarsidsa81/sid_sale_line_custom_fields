@@ -1,1 +1,1 @@
-from . import sale_order_line
+# Meta module: no models
