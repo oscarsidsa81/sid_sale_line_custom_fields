@@ -8,6 +8,7 @@
     <mapping directory="$PROJECT_DIR$/../sid_purchase_views_ov" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/../sid_sale_line_core" vcs="Git" />
     <mapping directory="$PROJECT_DIR$" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/../sid_sale_line_stock" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/../sid_sale_line_views_ov" vcs="Git" />
   </component>
 </project>
